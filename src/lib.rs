@@ -51,3 +51,42 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
 
     results
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn finds_single_matching_line() {
+        let query = "duct";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.";
+
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
+
+    #[test]
+    fn finds_multiple_matching_lines() {
+        let query = "bo";
+        let contents = "\
+book
+rust
+robot
+boat";
+
+        assert_eq!(vec!["book", "robot", "boat"], search(query, contents));
+    }
+
+    #[test]
+    fn returns_empty_when_no_match() {
+        let query = "zzz";
+        let contents = "\
+alpha
+beta
+gamma";
+
+        assert!(search(query, contents).is_empty());
+    }
+}
